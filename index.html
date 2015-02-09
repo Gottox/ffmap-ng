@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>FFMap NG</title>
+		<style>
+			#container {
+				position: absolute;
+				top:0;
+				right:0;
+				bottom:0;
+				left:0;
+			}
+		</style>
+		<script src="main.js"></script>
+	</head>
+	<body>
+		<noscript>This Map requires Javascript. Sorry, we are that fancy. :/</noscript>
+		<div id="container"></div>
+		<script>
+			var map = new FFMapNG(document.getElementById("container"), ffmapConf);
+		</script>
+	</body>
+</html>
