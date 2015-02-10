@@ -4,7 +4,7 @@ FETCH_TOOL = wget -O- -q
 #FETCH_TOOL = curl
 PUBLIC = public
 
-all: $(PUBLIC)/index.html $(PUBLIC)/script.js
+all: $(PUBLIC)/index.html $(PUBLIC)/script.js $(PUBLIC)/img
 
 clean:
 	rm -r $(PUBLIC) oboe-$(OBOE_VERSION).js d3-$(D3_VERSION).js || true
@@ -23,6 +23,16 @@ $(PUBLIC)/script.js: $(PUBLIC) d3-$(D3_VERSION).js oboe-$(OBOE_VERSION).js confi
 
 $(PUBLIC)/index.html: $(PUBLIC) index.html
 	cat index.html > $@
+
+$(PUBLIC)/img: $(PUBLIC) img
+	mkdir -p $(PUBLIC)/img
+	for f in img/*; do cat $$f > $(PUBLIC)/$$f; done
+
+jshint:
+	jshint config.js ffmapng.js
+
+jshint_watch:
+	inotifyrun /bin/sh -c "clear; make jshint";
 
 .PHONY: all clean
 

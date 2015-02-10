@@ -12,13 +12,15 @@
 				left:0;
 			}
 		</style>
-		<script src="main.js"></script>
+		<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"></script>
+		<script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+		<script src="script.js"></script>
 	</head>
 	<body>
 		<noscript>This Map requires Javascript. Sorry, we are that fancy. :/</noscript>
 		<div id="container"></div>
 		<script>
-			var map = new FFMapNG(document.getElementById("container"), ffmapConf);
+			var map = FFMapNG.init(document.getElementById("container"), ffmapConf);
 		</script>
 	</body>
 </html>

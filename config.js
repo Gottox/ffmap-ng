@@ -5,10 +5,19 @@ var ffmapConf = {
 	interval: 30,
 	api: {
 		// Raw data from alfred-json -z -r 159
-		statistic: "http://api.ffks.de/statistic.json",
+		statistic: "/statistics.json",
 		// Raw data from alfred-json -z -r 158
-		nodeinfo: "http://api.ffks.de/nodeinfo.json"
-		// Information produced by ffmap-backend 
-		nodes: "http://api.ffks.de/nodes.json"
+		nodeinfo: "/nodeinfo.json",
+		// graph informations
+		batadv_vis: "/batadv_vis.json",
+		// Information produced by ffmap-backend
+		// not implemented yet
+		//nodes: "http://api.ffks.de/nodes.json"
+	},
+	lang: 'de',
+	map: {
+		zoom: 15,
+		lat: 51.315747,
+		lon: 9.497960
 	}
 };
