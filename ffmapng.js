@@ -124,16 +124,8 @@
 				if(!link.from || !link.from.location || !link.to || !link.to.location)
 					return;
 				var points = new Array(
-					new OpenLayers.Geometry.Point(link.from.location.longitude, link.from.location.latitude)
-					.transform(
-						  new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-						  new OpenLayers.Projection("EPSG:900913") // to Spherical Mercator Projection
-					),
-					new OpenLayers.Geometry.Point(link.to.location.longitude, link.to.location.latitude)
-					.transform(
-						  new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-						  new OpenLayers.Projection("EPSG:900913") // to Spherical Mercator Projection
-					)
+					self.posTransform(new OpenLayers.Geometry.Point(link.from.location.longitude, link.from.location.latitude)),
+					self.posTransform(new OpenLayers.Geometry.Point(link.to.location.longitude, link.to.location.latitude))
 				);
 				var style = {
 					strokeColor: '#0000ff',
@@ -149,15 +141,50 @@
 			var self = this;
 
 			this.nodeLayer.clearMarkers();
-			nodes.forEach(function(node) {
+			var icon = new OpenLayers.Icon('img/wifi.png', {w:48,h:48}, {x:-24,y:-24});
+			nodes.map(function(node) {
 				if(!node.location) return;
-				var icon = new OpenLayers.Icon('img/wifi.png', {w:48,h:48}, {x:-24,y:-24});
-				self.nodeLayer.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(node.location.longitude, node.location.latitude)
-				.transform(
-					  new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-					  new OpenLayers.Projection("EPSG:900913") // to Spherical Mercator Projection
-				), icon));
+				var position = self.posTransform(new OpenLayers.LonLat(
+					node.location.longitude,
+					node.location.latitude
+				));
+				var i = icon.clone();
+				var marker = new OpenLayers.Marker(position, i);
+				var binder = {
+					icon: i,
+					node: node
+				};
+				marker.events.register('mousedown', binder, function() {
+					self.map.popups.forEach(function(p) {
+						self.map.removePopup(p);
+					});
+					self.map.addPopup(self.createPopup(this));
+				});
+				self.nodeLayer.addMarker(marker);
 			});
+		},
+		createPopup: function(binder) {
+			console.log(binder);
+			var span = document.createElement('span');
+			span.appendChild(document.createTextNode(binder.node.hostname));
+			var popup = new OpenLayers.Popup.FramedCloud(
+				binder.node.node_id, 
+				this.posTransform(new OpenLayers.LonLat(
+					binder.node.location.longitude,
+					binder.node.location.latitude
+				)),
+				null,
+				span.innerHTML,
+				null,
+				false
+			);
+			return popup;
+		},
+		posTransform: function(pos) {
+			return pos.transform(
+				new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+				new OpenLayers.Projection("EPSG:900913") // to Spherical Mercator Projection
+			);
 		},
 		update: function() {
 			this.modelFactory.update();
