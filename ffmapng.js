@@ -176,7 +176,7 @@
 				null,
 				span.innerHTML,
 				null,
-				false
+				true
 			);
 			return popup;
 		},
